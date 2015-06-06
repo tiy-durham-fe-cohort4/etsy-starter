@@ -105,12 +105,12 @@ gulp.task('js', function () {
 
 // Bundle vendor scripts (jQuery, Backbone, etc) into one script (vendor.js)
 gulp.task('js:vendor', function () {
-  return gulp.src([
-    './bower_components/jquery/dist/jquery.min.js',
-    './bower_components/underscore/underscore-min.js',
-    './bower_components/backbone/backbone-min.js'
-    ])
-    .pipe(concat('vendor.js'))
+  return browserify()
+    .require('jquery')
+    .require('underscore')
+    .require('backbone')
+    .bundle()
+    .pipe(source('vendor.js'))
     .pipe(gulp.dest('./dist/js'));
 });
 

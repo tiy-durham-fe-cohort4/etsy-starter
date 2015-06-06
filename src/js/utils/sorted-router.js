@@ -1,3 +1,6 @@
+var Backbone = require('backbone');
+var _ = require('underscore');
+
 // A wrapper around Backbone router that understands specificity
 function SortedRouter(router) {
   this.router = router || new Backbone.Router();

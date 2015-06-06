@@ -1,3 +1,5 @@
+var $ = require('jquery');
+
 function EtsyService (spec) {
   if (!spec.apiKey) {
     throw new Error('An API key is required!');
