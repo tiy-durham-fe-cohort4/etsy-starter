@@ -28,7 +28,7 @@ var src = {
 
 // The default task is what runs when you type 'gulp' in the terminal
 gulp.task('default', ['clean'], function () {
-  return gulp.start('html', 'img', 'font', 'js', 'scss', 'watch', 'reload', 'serve');
+  return gulp.start('html', 'img', 'font', 'js:views', 'js:vendor', 'js', 'scss', 'watch', 'reload', 'serve');
 });
 
 // Serve is a name I made up. You could call it 'dostuff' or whatever.
@@ -48,7 +48,7 @@ gulp.task('serve', function () {
 // 'default' task.
 gulp.task('watch', function () {
   watch(src.allHtml, function () {
-    gulp.start('html');
+    gulp.start('html', 'js:views');
   });
 
   watch(src.allJs, function () {
@@ -107,7 +107,8 @@ gulp.task('js', function () {
 gulp.task('js:vendor', function () {
   return gulp.src([
     './bower_components/jquery/dist/jquery.min.js',
-    './bower_components/underscore/underscore-min.js'
+    './bower_components/underscore/underscore-min.js',
+    './bower_components/backbone/backbone-min.js'
     ])
     .pipe(concat('vendor.js'))
     .pipe(gulp.dest('./dist/js'));
