@@ -1,20 +1,25 @@
-// Require gulp and connect. The require function looks in
-// the node_modules for a 'gulp' package and a 'gulp-connect'
-// package, and returns the function or object exported from
-// those packages. (More on exporting later.)
+// Import all packages needed for the build
 var gulp = require('gulp');
 var connect = require('gulp-connect');
 var ghPages = require('gulp-gh-pages');
+var browserify = require('browserify');
+var rename = require('gulp-rename');
+var uglify = require('gulp-uglify');
+var bulkify = require('bulkify');
+var concat = require('gulp-concat');
 var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
-var rename = require('gulp-rename');
+var hashify = require('gulp-hashify');
+var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
+var tap = require('gulp-tap');
 var del = require('del');
-var concat = require('gulp-concat');
 var watch = require('gulp-watch');
 
 // Common patterns used throughout the gulp configuration
 var src = {
   allHtml: './src/**/*.html',
+  allTemplates: './src/views/**/*.html',
   allJs: './src/**/*.js',
   allFont: './src/**/*.{ttf,woff,otf,eot}',
   allScss: './src/**/*.scss',
@@ -87,11 +92,15 @@ gulp.task('scss', function () {
     .pipe(gulp.dest('./dist/css'));
 });
 
-// For now, we'll just move the JS files straight into dist
-// but eventually, we'll minify and combine these, etc
-gulp.task('js', ['js:vendor'], function () {
-  return gulp.src(src.allJs)
-    .pipe(gulp.dest('./dist'));
+// Build our JavaScript files using browserify
+gulp.task('js', function () {
+  return browserify('./src/js/init.js', { debug: true })
+    .transform('bulkify')
+    .external('templates')
+    .bundle()
+    .pipe(source('app.js'))
+    .pipe(buffer())
+    .pipe(gulp.dest('./dist/js'));
 });
 
 // Bundle vendor scripts (jQuery, Backbone, etc) into one script (vendor.js)
@@ -104,10 +113,24 @@ gulp.task('js:vendor', function () {
     .pipe(gulp.dest('./dist/js'));
 });
 
+// Turn all views into a JavaScript object
+gulp.task('js:views', function () {
+  return gulp.src(src.allTemplates)
+    .pipe(hashify('_viewify.js'))
+    .pipe(tap(function(file) {
+      return browserify()
+        .require(file, { expose: 'templates' })
+        .bundle()
+        .pipe(source('templates.js'))
+        .pipe(buffer())
+        .pipe(gulp.dest('./dist/js'));
+    }));
+});
+
 // Let's move our html files into dest, too... Sometime, we'll modify this
 // to do minification, cache-busting, etc...
 gulp.task('html', function () {
-  return gulp.src(src.allHtml)
+  return gulp.src([src.allHtml, '!' + src.allTemplates])
     .pipe(gulp.dest('./dist'));
 });
 
