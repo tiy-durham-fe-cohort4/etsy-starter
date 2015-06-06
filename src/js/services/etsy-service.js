@@ -28,7 +28,7 @@ EtsyService.prototype = {
   },
   
   // Gets listings from Etsy
-  listings: function (opts) {
+  listings: function () {
     var url = this.baseUrl + '/listings/active.js?includes=MainImage&api_key=' + this.apiKey + '&callback=?';
     return this.fetchUrl(url);
   }

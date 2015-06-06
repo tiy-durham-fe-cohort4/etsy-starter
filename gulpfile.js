@@ -19,7 +19,7 @@ var watch = require('gulp-watch');
 // Common patterns used throughout the gulp configuration
 var src = {
   allHtml: './src/**/*.html',
-  allTemplates: './src/views/**/*.html',
+  allViews: './src/views/**/*.html',
   allJs: './src/**/*.js',
   allFont: './src/**/*.{ttf,woff,otf,eot}',
   allScss: './src/**/*.scss',
@@ -96,7 +96,7 @@ gulp.task('scss', function () {
 gulp.task('js', function () {
   return browserify('./src/js/init.js', { debug: true })
     .transform('bulkify')
-    .external('templates')
+    .external('views')
     .bundle()
     .pipe(source('app.js'))
     .pipe(buffer())
@@ -116,13 +116,13 @@ gulp.task('js:vendor', function () {
 
 // Turn all views into a JavaScript object
 gulp.task('js:views', function () {
-  return gulp.src(src.allTemplates)
-    .pipe(hashify('_viewify.js'))
+  return gulp.src(src.allViews)
+    .pipe(hashify('bundled-views.js'))
     .pipe(tap(function(file) {
       return browserify()
-        .require(file, { expose: 'templates' })
+        .require(file, { expose: 'views' })
         .bundle()
-        .pipe(source('templates.js'))
+        .pipe(source('views.js'))
         .pipe(buffer())
         .pipe(gulp.dest('./dist/js'));
     }));
@@ -131,7 +131,7 @@ gulp.task('js:views', function () {
 // Let's move our html files into dest, too... Sometime, we'll modify this
 // to do minification, cache-busting, etc...
 gulp.task('html', function () {
-  return gulp.src([src.allHtml, '!' + src.allTemplates])
+  return gulp.src([src.allHtml, '!' + src.allViews])
     .pipe(gulp.dest('./dist'));
 });
 
