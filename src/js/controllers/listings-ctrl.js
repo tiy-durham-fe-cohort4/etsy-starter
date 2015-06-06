@@ -1,3 +1,5 @@
+'use strict';
+
 var router = require('../router');
 var settings = require('../settings');
 var EtsyService = require('../services/etsy-service');

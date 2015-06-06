@@ -1,3 +1,5 @@
+'use strict';
+
 var router = require('./router');
 var bulk = require('bulk-require');
 
