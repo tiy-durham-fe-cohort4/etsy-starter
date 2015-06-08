@@ -44,7 +44,7 @@ There's a long todo list, including:
 - Clone this project
 - Remove the .git folder `rm -rf .git`
 - Initialize git `git init`, etc
-- Be sure to run `npm init`
+- Be sure to run `npm install`
 - Register for the Etsy API
   - [Go here](https://www.etsy.com/developers/register) and sign up
   - [Find your app's API key](https://www.etsy.com/developers/your-apps)
