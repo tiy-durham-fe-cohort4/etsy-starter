@@ -5,6 +5,7 @@ var router = require('../router');
 var settings = require('../settings');
 var EtsyService = require('../services/etsy-service');
 var view = require('../utils/view');
+var queryString = require('../utils/query-string');
 
 // Convert the Etsy data model into a form that is more easy for our templates
 function viewModel(listing) {
@@ -21,22 +22,24 @@ function viewModel(listing) {
   };
 }
 
-router.route('', 'listings', function () {
+router.route('', 'listings?*query', function (query) {
   var etsy = new EtsyService({ apiKey: settings.etsyApiKey });
- 
+  var searchValues = queryString(query);
+  
   function showListings (listings) {
     // Show data as HTML
-    view.render('listings', { listings: listings.results.map(viewModel) });
+    view.render('listings', { 
+      searchValues: searchValues, 
+      listings: listings.results.map(viewModel) 
+    });
     
     // Bind events
     $('.search-listings').on('submit', function (e) {
       e.preventDefault();
       
-      var searchTerm = $('input[name=keywords]').val();
+      var searchUrl = $(this).serialize();
       
-      etsy.listings({ keywords: searchTerm })
-        .done(showListings)
-        .fail(showError);
+      location.hash = '#listings?' + searchUrl;
     });
   }
   
@@ -45,7 +48,7 @@ router.route('', 'listings', function () {
     alert('Ruh roh!');
   }
   
-  etsy.listings()
+  etsy.listings(searchValues)
     .done(showListings)
     .fail(showError);
 });
