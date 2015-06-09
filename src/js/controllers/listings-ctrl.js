@@ -23,6 +23,7 @@ router.route('', 'listings?*query', function (query) {
     });
     
     // Bind events
+    $('.search-listings').parsley();
     $('.search-listings').on('submit', function (e) {
       e.preventDefault();
       
