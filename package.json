@@ -28,6 +28,7 @@
     "jasmine": "^2.3.1",
     "proxyquire": "^1.5.0",
     "rlite-router": "^1.0.82",
+    "susy": "^2.2.5",
     "tem": "0.0.2",
     "vinyl": "^0.4.6",
     "vinyl-buffer": "^1.0.0",

@@ -1,0 +1,9 @@
+// Configure SUSY's settings
+$susy: (
+  columns: 12,
+  container: 1024px,
+  global-box-sizing: border-box 
+);
+
+// Make our grid border-box box-sizing
+@include border-box-sizing;

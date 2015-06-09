@@ -1,0 +1,14 @@
+$medium-width: 768px;
+$big-width: 1024px;
+
+@mixin small-screen {
+  @media (max-width: #{$medium-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin big-screen {
+  @media (min-width: #{$medium-width}) {
+    @content;
+  }
+}
