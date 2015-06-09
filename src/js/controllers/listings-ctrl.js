@@ -1,5 +1,6 @@
 'use strict';
 
+var $ = require('jquery');
 var router = require('../router');
 var settings = require('../settings');
 var EtsyService = require('../services/etsy-service');
@@ -21,14 +22,30 @@ function viewModel(listing) {
 }
 
 router.route('', 'listings', function () {
-  // TODO: Show the listings page, load listings from Etsy, etc...
-  new EtsyService({ apiKey: settings.etsyApiKey })
-    .listings()
-    .done(function (data) {
-      console.log(data);
-      view.render('listings', { listings: data.results.map(viewModel) });
-    })
-    .fail(function (req, status, err) {
-      console.error(err || status);
+  var etsy = new EtsyService({ apiKey: settings.etsyApiKey });
+ 
+  function showListings (listings) {
+    // Show data as HTML
+    view.render('listings', { listings: listings.results.map(viewModel) });
+    
+    // Bind events
+    $('.search-listings').on('submit', function (e) {
+      e.preventDefault();
+      
+      var searchTerm = $('input[name=keywords]').val();
+      
+      etsy.listings({ keywords: searchTerm })
+        .done(showListings)
+        .fail(showError);
     });
+  }
+  
+  function showError(req, status, err) {
+    console.error(err || status);
+    alert('Ruh roh!');
+  }
+  
+  etsy.listings()
+    .done(showListings)
+    .fail(showError);
 });
