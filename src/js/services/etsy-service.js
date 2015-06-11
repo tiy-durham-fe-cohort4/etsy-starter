@@ -37,6 +37,11 @@ EtsyService.prototype = {
     
     var url = this.baseUrl + '/listings/active.js?includes=MainImage&keywords=' + encodeURIComponent(args.keywords) + '&api_key=' + this.apiKey + '&callback=?';
     return this.fetchUrl(url);
+  },
+  
+  listingById: function (id) {    
+    var url = this.baseUrl + '/listings/' + id + '.js?includes=MainImage&api_key=' + this.apiKey + '&callback=?';
+    return this.fetchUrl(url);
   }
 };
 
