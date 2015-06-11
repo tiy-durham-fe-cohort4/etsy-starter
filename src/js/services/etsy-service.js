@@ -40,7 +40,7 @@ EtsyService.prototype = {
   },
   
   listingById: function (id) {    
-    var url = this.baseUrl + '/listings/' + id + '.js?includes=MainImage&api_key=' + this.apiKey + '&callback=?';
+    var url = this.baseUrl + '/listing00s/' + id + '.js?includes=MainImage&api_key=' + this.apiKey + '&callback=?';
     return this.fetchUrl(url);
   }
 };
